@@ -29,22 +29,22 @@ public class LibroService implements GenericService<Libro> {
 
     private void validarLibro(Libro libro) throws Exception {
         if (libro.getTitulo() == null || libro.getTitulo().trim().isEmpty()) {
-            throw new Exception("El título del libro es obligatorio");
+            throw new IllegalArgumentException("El título del libro es obligatorio");
         }
         if (libro.getAutor() == null || libro.getAutor().trim().isEmpty()) {
-            throw new Exception("El autor del libro es obligatorio");
+            throw new IllegalArgumentException("El autor del libro es obligatorio");
         }
         if (libro.getTitulo().length() > 150) {
-            throw new Exception("El título no puede tener más de 150 caracteres");
+            throw new IllegalArgumentException("El título no puede tener más de 150 caracteres");
         }
         if (libro.getAutor().length() > 120) {
-            throw new Exception("El autor no puede tener más de 120 caracteres");
+            throw new IllegalArgumentException("El autor no puede tener más de 120 caracteres");
         }
         if (libro.getEditorial() == null || libro.getEditorial().trim().isEmpty()) {
-            throw new Exception("La editorial del libro es obligatorio");
+            throw new IllegalArgumentException("La editorial del libro es obligatorio");
         }
-        if (libro.getAnioEdicion() == null) throw new Exception("El año del libro es obligatorio");
-        if (!validarAnio(libro.getAnioEdicion())) throw new Exception("Debe ingresar un año valido");
+        if (libro.getAnioEdicion() == null) throw new IllegalArgumentException("El año del libro es obligatorio");
+        if (!validarAnio(libro.getAnioEdicion())) throw new IllegalArgumentException("Debe ingresar un año valido");
     }
 
     @Override
@@ -60,11 +60,11 @@ public class LibroService implements GenericService<Libro> {
             if (libro.getFichaBibliografica() != null) {
                 FichaBibliografica ficha = libro.getFichaBibliografica();
 
-                if(!validarIsbn(ficha.getIsbn())) throw new Exception("Debe ingresar un isbn valido");
+                if(!validarIsbn(ficha.getIsbn())) throw new IllegalArgumentException("Debe ingresar un isbn valido");
 
                 FichaBibliografica fichaExistente = fichaDao.buscarPorIsbn(ficha.getIsbn(), conn);
                 if (fichaExistente != null) {
-                    throw new Exception("Ya existe una ficha bibliográfica con el ISBN: " + ficha.getIsbn());
+                    throw new IllegalArgumentException("Ya existe una ficha bibliográfica con el ISBN: " + ficha.getIsbn());
                 }
                 ficha.setLibroId(libroCreado.getId());
                 FichaBibliografica fichaCreada = fichaDao.crear(ficha, conn);
@@ -101,11 +101,11 @@ public class LibroService implements GenericService<Libro> {
 
             if (libro.getFichaBibliografica() != null) {
                 FichaBibliografica ficha = libro.getFichaBibliografica();
-                if(!validarIsbn(ficha.getIsbn())) throw new Exception("Debe ingresar un isbn valido");
+                if(!validarIsbn(ficha.getIsbn())) throw new IllegalArgumentException("Debe ingresar un isbn valido");
 
                 FichaBibliografica fichaExistente = fichaDao.buscarPorIsbn(ficha.getIsbn(), conn);
                 if (fichaExistente != null && !fichaExistente.getId().equals(ficha.getId())) {
-                    throw new Exception("Ya existe otra ficha bibliográfica con el ISBN: " + ficha.getIsbn());
+                    throw new IllegalArgumentException("Ya existe otra ficha bibliográfica con el ISBN: " + ficha.getIsbn());
                 }
 
                 FichaBibliografica fichaActualizada = fichaDao.actualizar(ficha, conn);
@@ -182,7 +182,7 @@ public class LibroService implements GenericService<Libro> {
     }
 
     public Optional<?> buscarPorTitulo(String titulo) throws Exception {
-        if(titulo.trim().isEmpty()) throw new Exception("Debe ingresar el titulo para buscar");
+        if(titulo.trim().isEmpty()) throw new IllegalArgumentException("Debe ingresar el titulo para buscar");
         try (Connection conn = DatabaseConnection.getConnection()) {
             List<Libro>  libros = libroDao.buscarPorTitulo(titulo, conn);
             if(libros == null || libros.isEmpty()) return Optional.of("No hay libros que coincidan con el parámetro ingresado");
@@ -191,7 +191,7 @@ public class LibroService implements GenericService<Libro> {
     }
 
     public Optional<?> buscarPorAutor(String autor) throws Exception {
-        if(autor.trim().isEmpty()) throw new Exception("Debe ingresar un Autor para buscar");
+        if(autor.trim().isEmpty()) throw new IllegalArgumentException("Debe ingresar un Autor para buscar");
         try (Connection conn = DatabaseConnection.getConnection()) {
             List<Libro> libros = libroDao.buscarPorAutor(autor, conn);
             if(libros == null || libros.isEmpty()) return Optional.of("No hay libros que coincidan con el parámetro ingresado");
