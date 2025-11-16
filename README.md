@@ -1,4 +1,4 @@
-# Trabajo Final Integrador – Programación II
+# Trabajo Final Integrador – Consigna
 ## UTN – BibliotecaApp (Libro - Ficha Bibliográfica)
 
 Este proyecto implementa un sistema de gestión de libros utilizando una arquitectura por capas, JDBC, validaciones, transacciones y una relación 1 a 1 entre Libro y FichaBibliografica.
